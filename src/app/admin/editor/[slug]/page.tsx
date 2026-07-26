@@ -42,6 +42,7 @@ export default function EditPostPage() {
 
     useEffect(() => {
         fetchPost();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [slug]);
 
     const fetchPost = async () => {
@@ -79,10 +80,6 @@ export default function EditPostPage() {
             });
 
             if (res.ok) {
-                const data = await res.json();
-                if (data.gitWarning) {
-                    alert(`Saved, but Git Sync failed: ${data.gitWarning}`);
-                }
                 router.push("/admin");
             } else {
                 alert("Failed to save post");

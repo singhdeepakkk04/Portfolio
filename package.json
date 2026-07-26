@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "bash scripts/clone-content.sh && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -16,7 +16,9 @@
     "@radix-ui/react-separator": "^1.1.4",
     "@radix-ui/react-slot": "^1.2.0",
     "@radix-ui/react-tooltip": "^1.2.3",
+    "@supabase/supabase-js": "^2.110.8",
     "@types/mdx": "^2.0.13",
+    "@types/qrcode": "^1.5.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^11.18.2",
@@ -25,6 +27,8 @@
     "motion": "^12.7.4",
     "next": "14.2.4",
     "next-themes": "^0.3.0",
+    "otpauth": "^9.5.1",
+    "qrcode": "^1.5.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-markdown": "^9.1.0",

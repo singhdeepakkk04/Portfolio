@@ -6,11 +6,6 @@ export function middleware(request: NextRequest) {
 
     // Protect admin routes
     if (pathname.startsWith("/admin")) {
-        // Only allow in development
-        if (process.env.NODE_ENV !== "development") {
-            return NextResponse.redirect(new URL("/404", request.url));
-        }
-
         // Allow login page without authentication
         if (pathname === "/admin/login") {
             return NextResponse.next();

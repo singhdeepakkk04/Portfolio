@@ -1,12 +1,10 @@
-import fs from "fs";
-import matter from "gray-matter";
-import path from "path";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeStringify from "rehype-stringify";
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
+import { getServiceRoleClient } from "@/lib/supabase";
 
 type Metadata = {
   title: string;
@@ -18,9 +16,17 @@ type Metadata = {
   readingTime: number;
 };
 
-function getMDXFiles(dir: string) {
-  return fs.readdirSync(dir).filter((file) => path.extname(file) === ".mdx" && !file.startsWith('.'));
-}
+type PostRow = {
+  slug: string;
+  title: string;
+  published_at: string;
+  summary: string | null;
+  image: string | null;
+  category: string | null;
+  tags: string[] | null;
+  status: string | null;
+  content: string;
+};
 
 export async function markdownToHTML(markdown: string) {
   const p = await unified()
@@ -41,43 +47,52 @@ export async function markdownToHTML(markdown: string) {
   return p.toString();
 }
 
-export async function getPost(slug: string) {
-  const filePath = path.join("content", `${slug}.mdx`);
-  let source = fs.readFileSync(filePath, "utf-8");
-  const { content: rawContent, data: matterData } = matter(source);
-  const content = await markdownToHTML(rawContent);
+async function buildPost(row: PostRow) {
+  const content = await markdownToHTML(row.content);
 
   // Calculate reading time
-  const words = rawContent.split(/\s+/).filter(Boolean).length;
+  const words = row.content.split(/\s+/).filter(Boolean).length;
   const readingTime = Math.max(1, Math.ceil(words / 200));
 
   const metadata: Metadata = {
-    title: matterData.title || "Untitled",
-    publishedAt: matterData.publishedAt || new Date().toISOString(),
-    summary: matterData.summary || "",
-    image: matterData.image,
-    category: matterData.category,
-    tags: matterData.tags,
+    title: row.title || "Untitled",
+    publishedAt: row.published_at || new Date().toISOString(),
+    summary: row.summary || "",
+    image: row.image || undefined,
+    category: row.category || undefined,
+    tags: row.tags || undefined,
     readingTime,
   };
 
   return {
     source: content,
     metadata,
-    slug,
+    slug: row.slug,
   };
 }
 
-async function getAllPosts(dir: string) {
-  let mdxFiles = getMDXFiles(dir);
-  return Promise.all(
-    mdxFiles.map(async (file) => {
-      let slug = path.basename(file, path.extname(file));
-      return await getPost(slug);
-    }),
-  );
+export async function getPost(slug: string) {
+  const adminClient = getServiceRoleClient();
+  const { data, error } = await adminClient
+    .from("posts")
+    .select("*")
+    .eq("slug", slug)
+    .maybeSingle();
+
+  if (error || !data) return null;
+
+  return buildPost(data as PostRow);
 }
 
 export async function getBlogPosts() {
-  return getAllPosts(path.join(process.cwd(), "content"));
+  const adminClient = getServiceRoleClient();
+  const { data, error } = await adminClient
+    .from("posts")
+    .select("*")
+    .eq("status", "published")
+    .order("published_at", { ascending: false });
+
+  if (error || !data) return [];
+
+  return Promise.all((data as PostRow[]).map(buildPost));
 }

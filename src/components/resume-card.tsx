@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import Markdown from "react-markdown";
 
 interface ResumeCardProps {
   logoUrl: string;
@@ -103,13 +104,21 @@ export const ResumeCard = ({
               className="mt-2 text-xs sm:text-sm"
             >
               {Array.isArray(description) ? (
-                <ul className="list-disc list-inside">
+                <ul className="list-disc list-outside ml-4 mt-2">
                   {description.map((item, index) => (
-                    <li key={index}>{item}</li>
+                    <li key={index} className="mt-1">
+                      <Markdown components={{ p: React.Fragment }}>
+                        {item}
+                      </Markdown>
+                    </li>
                   ))}
                 </ul>
               ) : (
-                description
+                <div className="mt-2 text-xs sm:text-sm">
+                  <Markdown components={{ p: React.Fragment }}>
+                    {description as string}
+                  </Markdown>
+                </div>
               )}
             </motion.div>
           )}

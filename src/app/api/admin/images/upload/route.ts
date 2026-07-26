@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { uploadImage } from "@/lib/admin/file-operations";
+import { isValidSessionToken } from "@/lib/admin/auth";
 
 export async function POST(request: NextRequest) {
-    if (process.env.NODE_ENV !== 'development') {
-        return NextResponse.json({ error: "Not found" }, { status: 404 });
+    const session = request.cookies.get("admin-session")?.value;
+    if (!isValidSessionToken(session)) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     try {

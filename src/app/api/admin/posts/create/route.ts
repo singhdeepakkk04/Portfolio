@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createPost, type PostMetadata } from "@/lib/admin/file-operations";
+import { isValidSessionToken } from "@/lib/admin/auth";
 
 export async function POST(request: NextRequest) {
-    if (process.env.NODE_ENV !== 'development') {
-        return NextResponse.json({ error: "Not found" }, { status: 404 });
+    const session = request.cookies.get("admin-session")?.value;
+    if (!isValidSessionToken(session)) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     try {
@@ -16,19 +18,7 @@ export async function POST(request: NextRequest) {
 
         await createPost(slug, metadata, content);
 
-        // Auto-Push to GitHub
-        let gitWarning = null;
-        try {
-            const { syncWithGithub } = await import('@/lib/git');
-            const result = await syncWithGithub(`create post ${slug}`);
-            if (!result.success) {
-                gitWarning = result.error;
-            }
-        } catch (e: any) {
-            gitWarning = e.message;
-        }
-
-        return NextResponse.json({ success: true, gitWarning });
+        return NextResponse.json({ success: true });
     } catch (error) {
         console.error("Error creating post:", error);
         return NextResponse.json({ error: "Failed to create post" }, { status: 500 });

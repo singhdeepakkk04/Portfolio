@@ -87,6 +87,24 @@ export interface ResumeData {
     win?: string;
     icon?: string;
   }[];
+  startups: {
+    company: string;
+    href: string;
+    badges: string[];
+    location: string;
+    title: string;
+    logoUrl: string;
+    start: string;
+    end: string;
+    description: string | readonly string[];
+  }[];
+  certifications: {
+    title: string;
+    issuer: string;
+    date: string;
+    logoUrl?: string;
+    href?: string;
+  }[];
 }
 
 export const DATA: ResumeData = {
@@ -96,26 +114,26 @@ export const DATA: ResumeData = {
   location: "Mumbai, Maharashtra",
   locationLink: "https://www.google.com/maps/place/mumbai",
   description:
-    "MBA Candidate at IIT Roorkee | Technologist turned Business Leader | Open to Consulting, Product & Technology Management",
+    "MBA Graduate, IIT Roorkee | Technologist turned Business Leader | Open to Product Management, Strategy Consulting & Technical Leadership roles",
   summary:
-    "Currently pursuing an **MBA at IIT Roorkee**, I combine business acumen with over **3 years of hands-on engineering experience** to build data-driven products. My background allows me to seamlessly bridge the gap between stakeholders and engineering teams, translating complex business requirements into scalable technical solutions.\n\nI excel at using **data analytics** to uncover user needs, optimize product roadmaps, and drive measurable growth. I am passionate about solving real-world problems through innovative, user-centric technology.",
+    "With over **3 years of hands-on experience** spanning individual contributor and leadership roles, I operate at the intersection of business strategy and technology execution. I specialise in architecting robust **data engineering pipelines**, building **AI-enabled product analytics solutions**, and implementing enterprise **CDP tools** (like Twilio Segment) to deliver scalable **business intelligence platforms** that empower stakeholders to make data-driven decisions faster. From regulatory data warehousing to customer analytics dashboards serving millions of records, I've driven initiatives across complex, high-stakes domains. Whether it's decomposing an ambiguous business problem into clear, actionable work items for a sprint team, or architecting a scalable ETL pipeline on Azure and AWS — I bring the rare ability to **think like a strategist and execute like an engineer**.",
   avatarUrl: "/mee.jpg",
   skillGroups: [
     {
       title: "Data & Analytics",
-      skills: ["SQL", "Snowflake", "dbt", "Power BI", "Python", "Azure Data Factory"],
+      skills: ["Azure Data Factory", "Databricks", "dbt", "Fabric", "Power BI", "PySpark", "Python", "Snowflake", "SQL", "Tableau"],
     },
     {
       title: "Cloud & Engineering",
-      skills: ["AWS", "Azure", "Docker", "Talend", "Airflow"],
+      skills: ["Airflow", "AWS", "Azure", "Docker", "Talend"],
     },
     {
       title: "Product & Strategy",
-      skills: ["Roadmapping", "Agile/Scrum", "Stakeholder Management", "A/B Testing", "User Research"],
+      skills: ["A/B Testing", "Agile/Scrum", "Business Analysis", "Product Analytics", "Product Design", "Roadmapping", "Stakeholder Management", "System Design", "User Research"],
     },
     {
       title: "Tools",
-      skills: ["Figma", "Jira", "Confluence", "Excel", "Tableau"],
+      skills: ["Azure DevOps", "Confluence", "Excel", "Figma", "Git", "Jira"],
     },
   ] as { title: string; skills: string[] }[],
   navbar: [
@@ -169,35 +187,50 @@ export const DATA: ResumeData = {
       company: "MAQ Software",
       href: "https://maqsoftware.com/",
       badges: [],
-      location: "Remote",
-      title: "Management Trainee",
+      location: "Noida, India",
+      title: "AI PM",
+      logoUrl: "/maq.png",
+      start: "May 2026",
+      end: "Present",
+      description: [
+        "Built and maintained **automated dashboards and BI reports for key product and revenue metrics** in Power BI - translating complex business and product questions into structured, actionable recommendations for Product, Sales, and Operations stakeholders, reducing insight TAT by **~35%** and accelerating product decision cycles by **~2 weeks**.",
+        "Deployed an **AI-enabled product analytics automation platform** - scaling BI reporting output **5x without adding headcount**, compressing dashboard preparation from **4-6 hours to under 15 minutes** and saving **80+ analyst-hours** monthly.",
+        "Analysed **product usage, funnel performance, retention, and feature adoption** across 3+ concurrent product initiatives - conducting user segmentation and cohort analysis to identify growth opportunities and improving analytical delivery predictability by **~40%**.",
+        "Conducted **A/B testing and campaign impact measurement** across product experiments - validating analytical outputs against business requirements, lifting insight acceptance rate by **~30%** and cutting post-analysis rework TAT by **~2 weeks**.",
+        "**Tools:** SQL, Power BI, Tableau, Python, Azure OpenAI, Azure DevOps, JIRA.",
+      ],
+    },
+    {
+      company: "MAQ Software",
+      href: "https://maqsoftware.com/",
+      badges: [],
+      location: "Noida",
+      title: "Technical Manager Intern",
       logoUrl: "/maq.png",
       start: "May 2025",
       end: "Jul 2025",
       description: [
-        "Engineered a Python-based metadata discovery framework, boosting schema mapping speed by 70%.",
-        "Designed a fact-constellation SQL warehouse, optimizing queries for scalable and advanced analytic system.",
-        "Automated ETL pipelines in Azure Data Factory and deployed Power BI dashboards, reducing manual effort by 60%.",
-        "Managed agile sprints in Azure DevOps, ensuring on-time delivery and transparent stakeholder alignment.",
-        "Led milestones via stakeholder syncs and reviews, delivering production-grade dashboards.",
+        "Built an end-to-end **product KPI analytics dashboard** in Power BI - conducting cohort analysis, user segmentation, and retention tracking with a star-schema data model, accelerating product evaluation cycles by **40%** across **50+ users**.",
+        "Applied advanced SQL to identify product funnel drop-off points and built an **AI-enabled automated data processing tool** - cutting analytical TAT by **70%** and reducing manual workflows to under **30 minutes per source**.",
+        "Built a **natural language product analytics interface using Azure OpenAI** - enabling Product and Business stakeholders to query revenue dashboards in plain English, eliminating **5+ analyst-hours weekly** and reducing ad-hoc data access TAT from **2-3 business days to under 10 minutes**.",
+        "**Tools:** Python, SQL, Azure DevOps, Power BI, Figma, ADO MCP, Azure OpenAI.",
       ],
     },
     {
       company: "LTIMindtree",
       href: "https://www.ltimindtree.com/",
       badges: [],
-      location: "Remote",
-      title: "Data Engineer",
+      location: "Mumbai",
+      title: "Product Data Engineer",
       logoUrl: "/ltim.avif",
       start: "Jun 2021",
       end: "May 2024",
       description: [
-        "Designed and developed robust data pipelines using Hippo and Talend for significantly enhanced efficiency.",
-        "Automated report generation tasks with Python, reducing reporting time by 80% and manual workload.",
-        "Monitored data flow and resolved tickets in the initial project phase, achieving 99% incident resolution.",
-        "Deployed scalable and efficient data solutions using Microsoft Azure Data Factory, resulting in cost savings.",
-        "Optimized SQL queries in AWS Redshift for data extraction, reducing data retrieval time by over 35%.",
-        "Performed thorough testing and validation of Tableau dashboards to ensure data accuracy and functionality.",
+        "Wrote advanced SQL queries to analyse large-scale banking datasets and generate actionable insights for **15+ business stakeholders** - building automated ADF data pipelines on Azure (ADLS Gen2) that reduced data-to-insight lag and powering downstream BI dashboards and revenue metric reports.",
+        "Conducted **funnel analytics, cohort analysis, and user segmentation** on **500M+ monthly transaction records** using SQL and Python - identifying retention patterns, feature adoption signals, and growth opportunities to optimise product and campaign performance, with **99%+ pipeline SLA adherence**.",
+        "Automated **end-to-end BI reporting pipelines for revenue, conversion, and performance metrics** - eliminating manual Excel-based reporting, cutting TAT by **80%** and saving **45+ analyst-hours per reporting month**.",
+        "Demonstrated strong **SQL expertise on large-scale product datasets** - optimising complex analytical queries across high-volume tables, accelerating product dashboard refresh by **~40%** and reducing stakeholder wait time on critical BI and campaign performance reports.",
+        "Achieved **99%+ data accuracy** across analytics pipelines through automated data validation frameworks - cutting quality escalations by **~60%** and ensuring reliable product, revenue, and campaign metric reporting.",
       ],
     },
     {
@@ -242,8 +275,8 @@ export const DATA: ResumeData = {
       location: "Roorkee, India",
       title: "Placement Cell Coordinator",
       logoUrl: "/iitr.svg",
-      start: "2024",
-      end: "Present",
+      start: "Jul 2024",
+      end: "May 2026",
       description: [
         "Led a cross-functional team to completely digitize and overhaul the centralized placement process for IIT Roorkee MBA.",
         "Spearheaded corporate relations and outreach, successfully onboarding multiple new brands and recruiters for campus placements.",
@@ -295,21 +328,26 @@ export const DATA: ResumeData = {
       video: "",
     },
     {
-      title: "Placement Portal — IIT Roorkee",
-      href: "",
-      dates: "2024 - Present",
+      title: "Prasnah Kosa — Market Research Platform",
+      href: "https://www.thesmalldatastore.com/prasnah",
+      dates: "2021",
       active: true,
       description:
-        "Identified inefficiencies in the manual placement process and built a centralised Placement Portal with Role-Based Access Control (RBAC). Features include one-time student profile registration, unified resume verification, one-click job applications, and real-time application status tracking — eliminating redundant data entry for 200+ students.",
-      technologies: ["React", "Node.js", "PostgreSQL", "RBAC"],
+        "Identified a gap for affordable, localized survey tools in India and built a full-stack survey intelligence platform from scratch. Featuring regional language support and demographic targeting, the product was successfully sold to an incumbent market research firm (TheSmallDataStore) — validating the end-to-end business case from market gap analysis to product delivery.",
+      technologies: ["Python", "Django", "PostgreSQL", "Railway", "REST API"],
       links: [
         {
-          type: "In Production",
-          href: "",
+          type: "Website",
+          href: "https://www.thesmalldatastore.com/prasnah",
+          icon: <Icons.globe className="size-3" />,
+        },
+        {
+          type: "Live Product",
+          href: "https://prasnah-kosa-production.up.railway.app/login",
           icon: <Icons.globe className="size-3" />,
         },
       ],
-      image: "/iitr.svg",
+      image: "/prasnah.png",
       video: "",
     },
   ],
@@ -378,5 +416,45 @@ export const DATA: ResumeData = {
         },
       ],
     },
+  ],
+  startups: [
+    {
+      company: "Prasnah Kosa",
+      href: "https://www.thesmalldatastore.com/prasnah",
+      badges: [],
+      location: "Remote",
+      title: "Founder / Builder",
+      logoUrl: "/prasnah.png",
+      start: "2021",
+      end: "2022",
+      description: [
+        "Identified a gap for affordable, localized survey tools in India.",
+        "Built a full-stack survey intelligence platform from scratch.",
+        "Successfully sold the product to an incumbent market research firm (TheSmallDataStore)."
+      ],
+    }
+  ],
+  certifications: [
+    {
+      title: "Microsoft Certified: Azure Data Fundamentals",
+      issuer: "Microsoft",
+      date: "Dec 2022",
+      logoUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/azure/azure-original.svg",
+      href: "https://learn.microsoft.com/api/credentials/share/en-us/DeepakSingh-5065/EEF98E7E55824DAA?sharingId=77C7E962860A195C",
+    },
+    {
+      title: "Microsoft Certified: Azure Data Engineer Associate",
+      issuer: "Microsoft",
+      date: "Feb 2023",
+      logoUrl: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/azure/azure-original.svg",
+      href: "https://learn.microsoft.com/api/credentials/share/en-us/DeepakSingh-5065/67EA9F7C2A0EE0B6?sharingId=77C7E962860A195C",
+    },
+    {
+      title: "Twilio Segment Implementation Certification",
+      issuer: "Twilio Segment",
+      date: "Dec 2024",
+      logoUrl: "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/twilio.svg",
+      href: "https://verify.skilljar.com/c/57oihp277pvw",
+    }
   ],
 };

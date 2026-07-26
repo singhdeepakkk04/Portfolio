@@ -6,6 +6,8 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans as FontSans } from "next/font/google";
 import "./globals.css";
 import { GoogleAnalytics } from "@/components/google-analytics";
+import { AnalyticsTracker } from "@/components/analytics-tracker";
+import { Suspense } from "react";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -13,12 +15,23 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(DATA.url),
+  metadataBase: new URL(process.env.NODE_ENV === "development" ? "http://localhost:3000" : DATA.url),
   title: {
     default: DATA.name,
     template: `%s | ${DATA.name}`,
   },
   description: DATA.description,
+  keywords: [
+    "Deepak Singh",
+    "Deepak",
+    "Portfolio",
+    "Product Manager",
+    "Software Engineer",
+    "IIT Roorkee",
+    "Data Engineering",
+    "Web Development",
+    "AI",
+  ],
   openGraph: {
     title: `${DATA.name}`,
     description: DATA.description,
@@ -67,6 +80,36 @@ export default function RootLayout({
             {children}
           </TooltipProvider>
         </ThemeProvider>
+        
+        {/* JSON-LD Schema for World-Class SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: DATA.name,
+              url: DATA.url,
+              image: DATA.avatarUrl,
+              sameAs: Object.values(DATA.contact.social).map((s) => s.url),
+              jobTitle: "Product Manager & Software Engineer",
+              alumniOf: {
+                "@type": "CollegeOrUniversity",
+                name: "IIT Roorkee",
+              },
+              knowsAbout: [
+                "Product Management",
+                "Data Engineering",
+                "Machine Learning",
+                "Web Development",
+              ],
+            }),
+          }}
+        />
+        
+        <Suspense fallback={null}>
+          <AnalyticsTracker />
+        </Suspense>
         <GoogleAnalytics />
       </body>
     </html>

@@ -1,9 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getAllPosts } from "@/lib/admin/file-operations";
+import { isValidSessionToken } from "@/lib/admin/auth";
 
-export async function GET() {
-    if (process.env.NODE_ENV !== 'development') {
-        return NextResponse.json({ error: "Not found" }, { status: 404 });
+export async function GET(request: NextRequest) {
+    const session = request.cookies.get("admin-session")?.value;
+    if (!isValidSessionToken(session)) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const posts = await getAllPosts();

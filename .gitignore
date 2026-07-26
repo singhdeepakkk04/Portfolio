@@ -41,5 +41,8 @@ next-env.d.ts
 *.backup.mdx
 pnpm-lock.yaml
 ENV_SETUP.md
+test-supabase.js
+
+# legacy git-based blog storage (migrated to Supabase; kept locally as a backup only)
 content/
 public/blog/images/
