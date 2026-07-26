@@ -1,78 +1,144 @@
-# 🚀 Modern Portfolio & CMS
+<div align="center">
 
-This is a premium, high-performance portfolio website built with **Next.js 14**, **Tailwind CSS**, and **Magic UI**. It features a custom-built **Admin Dashboard** with a markdown editor and automated Git-based content syncing.
+# 🚀 Deepak Singh — Portfolio & Next.js CMS
+
+<p align="center">
+  <b>A high-performance, aesthetically stunning Developer Portfolio & AI-ready Content Management System</b>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js_14-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js 14" />
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/Magic_UI-5865F2?style=for-the-badge&logo=framer&logoColor=white" alt="Magic UI" />
+</p>
+
+<p align="center">
+  <a href="#-key-features">Key Features</a> •
+  <a href="#-tech-stack">Tech Stack</a> •
+  <a href="#-project-structure">Project Structure</a> •
+  <a href="#-getting-started">Getting Started</a> •
+  <a href="#-environment-variables">Environment Setup</a>
+</p>
 
 ---
 
-## 👨‍💼 About Me
+</div>
 
-**Deepak Singh**
-*Product Manager | Data Engineer | MBA Candidate @ IIT Roorkee*
+## 🌟 Overview
 
-I leverage data and engineering expertise to build scalable, user-centric products that drive business growth. Currently pursuing an MBA at **IIT Roorkee**, I combine business acumen with over **3 years of hands-on engineering experience**.
+Welcome to the repository for **Deepak Singh's Personal Portfolio & Blog Platform**. 
 
----
-
-## 🛠 Tech Stack
-
-- **Frontend**: [Next.js](https://nextjs.org/), [React](https://reactjs.org/), [TypeScript](https://www.typescriptlang.org/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **UI Components**: [Magic UI](https://magicui.design/), [Shadcn UI](https://ui.shadcn.com/)
-- **Animations**: [Framer Motion](https://www.framer.com/motion/)
-- **CMS**: custom-built Admin Dashboard with **MDX** support
-- **Infrastructure**: [Docker](https://www.docker.com/), [PostgreSQL](https://www.postgresql.org/)
+Built with **Next.js 14 (App Router)**, **TypeScript**, **Tailwind CSS**, and **Magic UI**, this platform blends top-tier visual aesthetics with high-performance infrastructure. It features a custom **Supabase-backed CMS** with real-time analytics tracking, an admin post editor, automated sitemaps, interactive diagram embeds, and dynamic recommendation workflows.
 
 ---
 
 ## ✨ Key Features
 
-- **Dynamic Blog**: MDX-powered blog with category filtering and SEO optimization.
-- **Admin Dashboard**: Secure CMs for creating, editing, and managing blog posts.
-- **Automated Git Sync**: Custom integration that pushes blog content to a **private** GitHub repository while keeping the portfolio code **public**.
-- **Responsive Design**: Flawless experience across desktop, tablet, and mobile devices.
-- **Premium UI**: Integrated with Magic UI for high-quality animations and visual excellence.
+- **🎨 Premium Modern Aesthetics**: Built with custom dark-mode visuals, glassmorphism, smooth animations powered by Framer Motion, and Bento grid components from Magic UI.
+- **📝 Supabase CMS**: Fully persistent database-driven blog and content manager featuring draft/published states, categories, tag filtering, and live markdown processing.
+- **⚡ Admin Portal & Editor**: Secure `/admin` dashboard for writing, previewing, managing blog posts, and uploading rich media/interactive diagrams seamlessly.
+- **📊 Real-time Privacy-focused Analytics**: Native tracking endpoint (`/api/analytics`) and dashboard for capturing page views, visitor sessions, and content engagement without third-party bloat.
+- **💡 Smart Recommendation Engine**: Interactive `/recommend` route and API endpoint delivering tailored recommendations based on user interests.
+- **🔍 Automated SEO & Sitemap**: Dynamic `sitemap.ts` generation, metadata tagging, OpenGraph support, and semantic HTML5 structuring for max search indexing.
+- **📱 Ultra-Responsive**: Designed mobile-first to deliver flawless performance across smartphone, tablet, and ultra-wide displays.
 
 ---
 
-## 📦 Project Structure
+## 🛠 Tech Stack
+
+| Domain | Technologies & Libraries |
+| :--- | :--- |
+| **Framework** | [Next.js 14](https://nextjs.org/) (App Router), [React 18](https://react.dev/), [TypeScript](https://www.typescriptlang.org/) |
+| **Database & Auth** | [Supabase](https://supabase.com/) (PostgreSQL & Service Role Client) |
+| **Styling & UI** | [Tailwind CSS](https://tailwindcss.com/), [Magic UI](https://magicui.design/), [Shadcn UI](https://ui.shadcn.com/) |
+| **Animations** | [Framer Motion](https://www.framer.com/motion/) |
+| **Markdown Processing** | Unified, Remark, Rehype, Rehype Pretty Code |
+| **Icons & Typography** | [Lucide React](https://lucide.dev/), Geist Sans & Mono fonts |
+| **Deployment** | [Vercel](https://vercel.com/) |
+
+---
+
+## 📁 Project Structure
 
 ```text
-├── content/              # Blog posts (Private Submodule)
-├── public/               # Static assets & images
+portfolio/
 ├── src/
-│   ├── app/              # Next.js App Router (blog, admin, main)
-│   ├── components/       # Reusable UI components
-│   ├── data/             # Static site data (resume, projects)
-│   └── lib/              # Utility functions and Git sync logic
+│   ├── app/                          # Next.js App Router Pages & APIs
+│   │   ├── (blog)/                   # Blog listing & article reading pages
+│   │   ├── (main)/                   # Hero, About, Experience, Projects sections
+│   │   ├── admin/                    # Secure Admin Dashboard & MDX Post Editor
+│   │   │   └── editor/[slug]/        # Live Post Editor
+│   │   ├── api/                      # Backend API Endpoints
+│   │   │   ├── admin/                # Post CRUD, analytics & upload APIs
+│   │   │   ├── analytics/            # Event tracking ingest
+│   │   │   └── recommendations/      # Recommendation engine route
+│   │   ├── recommend/                # Recommendation Engine UI
+│   │   └── sitemap.ts                # Dynamic sitemap generation
+│   ├── components/                   # UI Components (Bento grid, cards, analytics)
+│   ├── data/                         # Data layer (Resume JSON & Blog queries)
+│   └── lib/                          # Utility wrappers, Supabase client & auth
+├── scripts/                          # DB migrations & utility scripts
+├── public/                           # Static assets, images & diagrams
 └── ...
 ```
 
 ---
 
-## 🛡️ Setup & Configuration
+## 🔐 Environment Variables
 
-### Environment Variables
-Create a `.env.local` file with the following keys:
-```env
-ADMIN_PASSWORD=your_password
-GITHUB_TOKEN=your_github_personal_access_token
-GITHUB_REPO=your_username/your_private_blog_repo
+Create a `.env.local` file in the root of your project:
+
+```bash
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=https://your-supabase-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+
+# Admin Portal Authentication
+ADMIN_PASSWORD=your_secure_admin_password
 ```
 
-### Installation
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- **Node.js**: `v18.x` or higher
+- **Package Manager**: `npm` or `pnpm`
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/singhdeepakkk04/Portfolio.git
+cd Portfolio
+```
+
+### 2. Install dependencies
 ```bash
 npm install
+```
+
+### 3. Run the development server
+```bash
 npm run dev
 ```
 
+Open [http://localhost:3000](http://localhost:3000) in your browser to view the portfolio.
+
 ---
 
-## 📬 Contact
+## 👨‍💻 About The Author
+
+**Deepak Singh**  
+*MBA Graduate @ IIT Roorkee | Technologist & Data Strategist*
 
 - **LinkedIn**: [deepak-singh-iitr](https://www.linkedin.com/in/deepak-singh-iitr/)
+- **GitHub**: [@singhdeepakkk04](https://github.com/singhdeepakkk04)
 - **Email**: [deepaksingh4.iitr@gmail.com](mailto:deepaksingh4.iitr@gmail.com)
-- **Website**: [dillion.io](https://dillion.io)
 
 ---
 
-<p align="center">Made with ❤️ by Deepak Singh</p>
+<div align="center">
+  <p>Designed & Built with ❤️ by Deepak Singh</p>
+</div>
