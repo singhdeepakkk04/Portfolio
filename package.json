@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview"
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
@@ -54,6 +55,7 @@
     "@types/react-dom": "^18.3.6",
     "eslint": "^10.8.0",
     "eslint-config-next": "^16.2.12",
+    "patch-package": "^8.0.1",
     "postcss": "^8.5.3",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.3",
