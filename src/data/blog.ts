@@ -3,6 +3,7 @@ import rehypeStringify from "rehype-stringify";
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
+import { createHighlighter, createJavaScriptRegexEngine } from "shiki";
 import { unified } from "unified";
 import { getServiceRoleClient } from "@/lib/supabase";
 
@@ -40,6 +41,14 @@ export async function markdownToHTML(markdown: string) {
         dark: "min-dark",
       },
       keepBackground: false,
+      // Cloudflare Workers disallows compiling WASM from raw bytes at runtime,
+      // which rules out shiki's default oniguruma engine. The JS regex engine
+      // has no WASM dependency, so it works in the Workers runtime.
+      getHighlighter: (options) =>
+        createHighlighter({
+          ...options,
+          engine: createJavaScriptRegexEngine(),
+        }),
     })
     .use(rehypeStringify)
     .process(markdown);

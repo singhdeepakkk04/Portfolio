@@ -203,5 +203,3 @@ export default async function Blog({
     </div>
   );
 }
-
-export const runtime = 'edge';
