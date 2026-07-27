@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { DATA } from "@/data/resume";
 import Link from "next/link";
 import React from "react";
-import Markdown from "react-markdown";
+import Markdown from "@/components/markdown";
 import WordRotate from "@/components/magicui/word-rotate";
 import { BentoCard, BentoGrid } from "@/components/magicui/bento-grid";
 import { GlobeIcon, DownloadIcon, Quote } from "lucide-react";

@@ -9,7 +9,7 @@ import {
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import Markdown from "react-markdown";
+import Markdown from "@/components/markdown";
 
 interface Props {
   title: string;
