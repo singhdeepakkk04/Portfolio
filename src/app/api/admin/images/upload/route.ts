@@ -4,7 +4,7 @@ import { isValidSessionToken } from "@/lib/admin/auth";
 
 export async function POST(request: NextRequest) {
     const session = request.cookies.get("admin-session")?.value;
-    if (!isValidSessionToken(session)) {
+    if (!(await isValidSessionToken(session))) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -27,3 +27,4 @@ export async function POST(request: NextRequest) {
 }
 
 export const runtime = 'edge';
+

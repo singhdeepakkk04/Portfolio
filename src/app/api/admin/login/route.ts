@@ -122,7 +122,7 @@ export async function POST(request: NextRequest) {
 
         // TOTP verified — create session
         pendingTOTP.delete(temp_token);
-        const sessionToken = createSessionToken();
+        const sessionToken = await createSessionToken();
         const response = NextResponse.json({ success: true, authenticated: true });
 
         response.cookies.set("admin-session", sessionToken, {
@@ -183,7 +183,7 @@ export async function POST(request: NextRequest) {
         pendingSetups.delete(setup_token);
 
         // Create session
-        const sessionToken = createSessionToken();
+        const sessionToken = await createSessionToken();
         const response = NextResponse.json({
             success: true,
             authenticated: true,
@@ -205,3 +205,4 @@ export async function POST(request: NextRequest) {
 }
 
 export const runtime = 'edge';
+

@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
 // Admin route to get all recommendations (including unapproved)
 export async function GET(request: NextRequest) {
     const session = request.cookies.get("admin-session")?.value;
-    if (!isValidSessionToken(session)) {
+    if (!(await isValidSessionToken(session))) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -60,7 +60,7 @@ export async function GET(request: NextRequest) {
 // Admin route to approve/reject recommendations
 export async function PATCH(request: NextRequest) {
     const session = request.cookies.get("admin-session")?.value;
-    if (!isValidSessionToken(session)) {
+    if (!(await isValidSessionToken(session))) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -87,7 +87,7 @@ export async function PATCH(request: NextRequest) {
 // Admin route to delete a recommendation
 export async function DELETE(request: NextRequest) {
     const session = request.cookies.get("admin-session")?.value;
-    if (!isValidSessionToken(session)) {
+    if (!(await isValidSessionToken(session))) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -113,3 +113,4 @@ export async function DELETE(request: NextRequest) {
 }
 
 export const runtime = 'edge';
+

@@ -7,7 +7,7 @@ export async function GET(
     { params }: { params: { slug: string } }
 ) {
     const session = request.cookies.get("admin-session")?.value;
-    if (!isValidSessionToken(session)) {
+    if (!(await isValidSessionToken(session))) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -29,7 +29,7 @@ export async function PUT(
     { params }: { params: { slug: string } }
 ) {
     const session = request.cookies.get("admin-session")?.value;
-    if (!isValidSessionToken(session)) {
+    if (!(await isValidSessionToken(session))) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -50,7 +50,7 @@ export async function DELETE(
     { params }: { params: { slug: string } }
 ) {
     const session = request.cookies.get("admin-session")?.value;
-    if (!isValidSessionToken(session)) {
+    if (!(await isValidSessionToken(session))) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -64,3 +64,4 @@ export async function DELETE(
 }
 
 export const runtime = 'edge';
+

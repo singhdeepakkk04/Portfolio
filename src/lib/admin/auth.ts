@@ -1,24 +1,44 @@
 import * as OTPAuth from "otpauth";
-import crypto from "node:crypto";
+const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
-// ============================================
-// SESSION MANAGEMENT (Stateless, signed cookie)
-// ============================================
-// Serverless functions don't share memory across instances/cold starts, so an
-// in-memory session store only works by luck (same warm instance handling both
-// requests). Sessions are instead a signed, self-verifying token: no server-side
-// state needed, so validation works identically on every instance.
-const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days, matches the cookie's maxAge
-
-function getSessionSecret(): Buffer {
-    // Derived from secrets that must already be configured for login to work at
-    // all, so this doesn't require provisioning a new env var anywhere.
+async function getSessionSecretKey(): Promise<CryptoKey> {
     const material = `${process.env.ADMIN_PASSWORD || ""}:${process.env.TOTP_SECRET || ""}`;
-    return crypto.createHash("sha256").update(material).digest();
+    const encoder = new TextEncoder();
+    const keyMaterial = await crypto.subtle.digest("SHA-256", encoder.encode(material));
+    return crypto.subtle.importKey(
+        "raw",
+        keyMaterial,
+        { name: "HMAC", hash: "SHA-256" },
+        false,
+        ["sign", "verify"]
+    );
 }
 
-function sign(payload: string): string {
-    return crypto.createHmac("sha256", getSessionSecret()).update(payload).digest("base64url");
+function bufferToBase64Url(buffer: ArrayBuffer | Uint8Array): string {
+    const bytes = new Uint8Array(buffer);
+    let binary = "";
+    for (let i = 0; i < bytes.byteLength; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+function base64UrlToBuffer(base64url: string): ArrayBuffer {
+    const base64 = base64url.replace(/-/g, "+").replace(/_/g, "/");
+    const pad = base64.length % 4 === 0 ? "" : "=".repeat(4 - (base64.length % 4));
+    const binary = atob(base64 + pad);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes.buffer;
+}
+
+async function sign(payload: string): Promise<string> {
+    const key = await getSessionSecretKey();
+    const encoder = new TextEncoder();
+    const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(payload));
+    return bufferToBase64Url(signature);
 }
 
 export function isValidPassword(password: string): boolean {
@@ -31,27 +51,30 @@ export function isValidUsername(username: string): boolean {
     return username.toLowerCase() === adminUsername.toLowerCase();
 }
 
-export function createSessionToken(): string {
-    const payload = Buffer.from(JSON.stringify({ exp: Date.now() + SESSION_TTL_MS })).toString("base64url");
-    const signature = sign(payload);
+export async function createSessionToken(): Promise<string> {
+    const payloadObj = { exp: Date.now() + SESSION_TTL_MS };
+    const encoder = new TextEncoder();
+    const payload = bufferToBase64Url(encoder.encode(JSON.stringify(payloadObj)));
+    const signature = await sign(payload);
     return `${payload}.${signature}`;
 }
 
-export function isValidSessionToken(token: string | undefined): boolean {
+export async function isValidSessionToken(token: string | undefined): Promise<boolean> {
     if (!token) return false;
 
     const [payload, signature] = token.split(".");
     if (!payload || !signature) return false;
 
-    const expectedSignature = sign(payload);
-    const provided = Buffer.from(signature);
-    const expected = Buffer.from(expectedSignature);
-    if (provided.length !== expected.length || !crypto.timingSafeEqual(provided, expected)) {
-        return false;
-    }
-
     try {
-        const { exp } = JSON.parse(Buffer.from(payload, "base64url").toString());
+        const key = await getSessionSecretKey();
+        const encoder = new TextEncoder();
+        const signatureBuffer = base64UrlToBuffer(signature);
+        const isValid = await crypto.subtle.verify("HMAC", key, signatureBuffer, encoder.encode(payload));
+        
+        if (!isValid) return false;
+
+        const payloadStr = new TextDecoder().decode(base64UrlToBuffer(payload));
+        const { exp } = JSON.parse(payloadStr);
         return typeof exp === "number" && Date.now() < exp;
     } catch {
         return false;
