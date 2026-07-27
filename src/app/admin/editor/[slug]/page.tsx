@@ -301,3 +301,5 @@ export default function EditPostPage() {
         </div>
     );
 }
+
+export const runtime = 'edge';

@@ -9,3 +9,5 @@ export async function POST(request: NextRequest) {
     response.cookies.delete("admin-session");
     return response;
 }
+
+export const runtime = 'edge';

@@ -15,3 +15,5 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Failed to render" }, { status: 500 });
     }
 }
+
+export const runtime = 'edge';

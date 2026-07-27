@@ -11,3 +11,5 @@ export async function GET(request: NextRequest) {
     const posts = await getAllPosts();
     return NextResponse.json(posts);
 }
+
+export const runtime = 'edge';
