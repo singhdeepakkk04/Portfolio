@@ -1,4 +1,4 @@
-import { getServiceRoleClient } from "@/lib/supabase";
+import { getServiceRoleClient, requireServiceRoleClient } from "@/lib/supabase";
 
 const BUCKET = "Blogs";
 
@@ -67,7 +67,7 @@ export async function createPost(
     metadata: PostMetadata,
     content: string
 ): Promise<void> {
-    const adminClient = getServiceRoleClient();
+    const adminClient = requireServiceRoleClient();
     const { error } = await adminClient.from("posts").insert(metadataToRow(slug, metadata, content));
     if (error) throw new Error(error.message);
 }
@@ -77,7 +77,7 @@ export async function updatePost(
     metadata: PostMetadata,
     content: string
 ): Promise<void> {
-    const adminClient = getServiceRoleClient();
+    const adminClient = requireServiceRoleClient();
     const row = metadataToRow(slug, metadata, content);
     row.updated_at = new Date().toISOString();
     const { error } = await adminClient.from("posts").update(row).eq("slug", slug);
@@ -85,13 +85,15 @@ export async function updatePost(
 }
 
 export async function deletePost(slug: string): Promise<void> {
-    const adminClient = getServiceRoleClient();
+    const adminClient = requireServiceRoleClient();
     const { error } = await adminClient.from("posts").delete().eq("slug", slug);
     if (error) throw new Error(error.message);
 }
 
 export async function getAllPosts(): Promise<Array<{ slug: string; metadata: PostMetadata; content: string }>> {
     const adminClient = getServiceRoleClient();
+    if (!adminClient) return [];
+
     const { data, error } = await adminClient
         .from("posts")
         .select("*")
@@ -104,6 +106,8 @@ export async function getAllPosts(): Promise<Array<{ slug: string; metadata: Pos
 
 export async function getPost(slug: string): Promise<{ metadata: PostMetadata; content: string } | null> {
     const adminClient = getServiceRoleClient();
+    if (!adminClient) return null;
+
     const { data, error } = await adminClient
         .from("posts")
         .select("*")
@@ -130,7 +134,7 @@ export async function uploadImage(
     const buffer = Buffer.from(await file.arrayBuffer());
     const storagePath = `${postSlug}/${Date.now()}-${fileName}`;
 
-    const adminClient = getServiceRoleClient();
+    const adminClient = requireServiceRoleClient();
     const { error } = await adminClient.storage.from(BUCKET).upload(storagePath, buffer, {
         contentType: file.type || 'application/octet-stream',
         upsert: true,

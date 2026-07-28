@@ -56,7 +56,7 @@ Built with **Next.js 14 (App Router)**, **TypeScript**, **Tailwind CSS**, and **
 | **Animations** | [Framer Motion](https://www.framer.com/motion/) |
 | **Markdown Processing** | Unified, Remark, Rehype, Rehype Pretty Code |
 | **Icons & Typography** | [Lucide React](https://lucide.dev/), Geist Sans & Mono fonts |
-| **Deployment** | [Vercel](https://vercel.com/) |
+| **Deployment** | [Cloudflare Workers](https://workers.cloudflare.com/) via [OpenNext](https://opennext.js.org/cloudflare) |
 
 ---
 
@@ -125,6 +125,59 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to view the portfolio.
+
+---
+
+## ☁️ Deploying to Cloudflare Workers
+
+The app runs on Cloudflare Workers through the [OpenNext](https://opennext.js.org/cloudflare)
+adapter. `wrangler.jsonc` holds the Worker config; `open-next.config.ts` holds the adapter config.
+
+### 1. Provide runtime secrets
+
+The Worker reads its credentials from **unprefixed** variable names at runtime:
+
+| Variable | Purpose |
+| --- | --- |
+| `SUPABASE_URL` | Supabase project URL |
+| `SUPABASE_ANON_KEY` | Public anon key (RLS-constrained) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Service-role key (bypasses RLS, server-only) |
+| `ADMIN_USERNAME` / `ADMIN_PASSWORD` | Admin portal login |
+| `TOTP_SECRET` | Admin 2FA seed |
+
+> **Why not the `NEXT_PUBLIC_` names?** Next.js inlines every `NEXT_PUBLIC_*` value into
+> the bundle at **build** time. A build that runs without `.env.local` bakes in `undefined`,
+> and no Cloudflare secret can override it afterwards. The unprefixed names stay real
+> runtime lookups, which is what the Workers runtime populates per request.
+
+Put them in `.dev.vars` (gitignored) for local runs, then upload the same file as
+production secrets:
+
+```bash
+npm run cf:secrets      # wrangler secret bulk .dev.vars
+```
+
+### 2. Build, preview, deploy
+
+```bash
+npm run cf:build        # build the Worker bundle into .open-next/
+npm run cf:preview      # run it locally in the real workerd runtime
+npm run cf:deploy       # build + publish to Cloudflare
+```
+
+`npm run dev` still runs the ordinary Next.js dev server and reads `.env.local`; use
+`cf:preview` when you need to reproduce Workers-specific behaviour.
+
+### Constraints worth remembering
+
+- **3 MiB compressed bundle limit.** Check with `npx wrangler deploy --dry-run`. Shiki is
+  imported grammar-by-grammar in `src/data/blog.ts` precisely to stay under it — importing
+  the full `shiki` package pulls ~200 grammars and blows the limit.
+- **No WASM compiled from raw bytes.** This rules out Shiki's default oniguruma engine
+  (hence `createJavaScriptRegexEngine`) and `next/og` / `ImageResponse` (hence the static
+  `src/app/icon.svg` instead of a generated icon).
+- **Middleware lives at `src/middleware.ts`.** This project uses a `src/` directory, so a
+  root-level `middleware.ts` is silently ignored by Next.js and the admin gate never runs.
 
 ---
 

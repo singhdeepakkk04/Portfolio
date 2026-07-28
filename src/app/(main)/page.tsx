@@ -17,6 +17,13 @@ import HyperText from "@/components/magicui/hyper-text";
 import ShimmerButton from "@/components/magicui/shimmer-button";
 import { ContactForm } from "@/components/contact-form";
 import { getServiceRoleClient } from "@/lib/supabase";
+import { rethrowIfNextControlFlow } from "@/lib/next-errors";
+
+// Recommendations are read live on every request. supabase-js catches Next's
+// "bail out of static generation" signal internally and hands it back as a
+// normal query error, so the page cannot rely on that throw propagating to opt
+// itself out of prerendering -- say so explicitly instead.
+export const dynamic = "force-dynamic";
 
 const BLUR_FADE_DELAY = 0.04;
 
@@ -48,13 +55,46 @@ const SKILL_ICONS: Record<string, string> = {
   "Azure DevOps": "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/azuredevops.svg",
 };
 
-export default async function Page() {
+type Recommendation = {
+  id: string | number;
+  content: string;
+  author_name: string;
+  author_title: string | null;
+  author_company: string | null;
+  linkedin_url: string | null;
+};
+
+// The recommendations section is a nice-to-have, not the point of the page.
+// Anything that goes wrong reaching Supabase -- missing credentials, a network
+// blip from the edge, a schema change -- degrades to the existing "No
+// recommendations yet" empty state instead of taking the whole homepage down
+// with a 500.
+async function getApprovedRecommendations(): Promise<Recommendation[]> {
   const adminClient = getServiceRoleClient();
-  const { data: recommendations } = await adminClient
-    .from("recommendations")
-    .select("*")
-    .eq("approved", true)
-    .order("created_at", { ascending: false });
+  if (!adminClient) return [];
+
+  try {
+    const { data, error } = await adminClient
+      .from("recommendations")
+      .select("*")
+      .eq("approved", true)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("[home] Failed to load recommendations:", error.message);
+      return [];
+    }
+
+    return (data ?? []) as Recommendation[];
+  } catch (e) {
+    rethrowIfNextControlFlow(e);
+    console.error("[home] Unexpected error loading recommendations:", e);
+    return [];
+  }
+}
+
+export default async function Page() {
+  const recommendations = await getApprovedRecommendations();
 
   return (
     <main className="relative flex flex-col min-h-[100dvh] space-y-8">
