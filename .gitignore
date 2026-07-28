@@ -28,7 +28,10 @@ yarn-error.log*
 # local env files
 .env
 .env*.local
+# Cloudflare Workers runtime secrets (Supabase service-role key, admin password,
+# TOTP secret). Never commit: upload with `npm run cf:secrets` instead.
 .dev.vars
+.dev.vars.*
 
 # cloudflare / opennext build output
 /.open-next/

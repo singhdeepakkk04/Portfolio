@@ -1,14 +1,26 @@
 import { MetadataRoute } from "next";
 import { DATA } from "@/data/resume";
-import { getBlogPosts } from "@/data/blog";
+import fs from "fs";
+import path from "path";
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Get all blog posts from Supabase
-  const posts = await getBlogPosts();
+export default function sitemap(): MetadataRoute.Sitemap {
+  // Get all blog posts
+  const postsDirectory = path.join(process.cwd(), "content");
+  let postSlugs: string[] = [];
   
-  const postsSitemap = posts.map((post) => ({
-    url: `${DATA.url}/blog/${post.slug}`,
-    lastModified: new Date(post.metadata.publishedAt),
+  try {
+    if (fs.existsSync(postsDirectory)) {
+      postSlugs = fs.readdirSync(postsDirectory)
+        .filter((file) => file.endsWith(".mdx"))
+        .map((file) => file.replace(/\.mdx$/, ""));
+    }
+  } catch (e) {
+    console.error("Error reading posts directory for sitemap", e);
+  }
+
+  const postsSitemap = postSlugs.map((slug) => ({
+    url: `${DATA.url}/blog/${slug}`,
+    lastModified: new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.8,
   }));

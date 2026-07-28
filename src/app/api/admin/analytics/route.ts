@@ -4,11 +4,14 @@ import { isValidSessionToken } from "@/lib/admin/auth";
 
 export async function GET(request: NextRequest) {
     const session = request.cookies.get("admin-session")?.value;
-    if (!(await isValidSessionToken(session))) {
+    if (!isValidSessionToken(session)) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const adminClient = getServiceRoleClient();
+    if (!adminClient) {
+        return NextResponse.json({ error: "Analytics storage is not configured" }, { status: 503 });
+    }
 
     // Fetch last 500 rows for comprehensive stats
     const { data: rows, error } = await adminClient
@@ -128,4 +131,3 @@ export async function GET(request: NextRequest) {
         },
     });
 }
-

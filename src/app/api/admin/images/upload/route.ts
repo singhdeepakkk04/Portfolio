@@ -4,7 +4,7 @@ import { isValidSessionToken } from "@/lib/admin/auth";
 
 export async function POST(request: NextRequest) {
     const session = request.cookies.get("admin-session")?.value;
-    if (!(await isValidSessionToken(session))) {
+    if (!isValidSessionToken(session)) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -25,4 +25,3 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Upload failed" }, { status: 500 });
     }
 }
-

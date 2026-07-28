@@ -1,16 +1,22 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "portfolio",
-  "compatibility_date": "2026-07-27",
-  "observability": {
-    "enabled": true
-  },
-  "compatibility_flags": [
-    "nodejs_compat"
-  ],
   "main": ".open-next/worker.js",
+  "compatibility_date": "2025-09-23",
+  // `nodejs_compat` is required by OpenNext: the Next.js server bundle pulls in
+  // node:crypto, node:buffer and friends. `global_fetch_strictly_public` makes
+  // fetches to our own hostname go out over the public internet instead of
+  // looping back into this same Worker isolate.
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
   }
+  // NOTE: no "vars" block on purpose. Every value this app needs (Supabase
+  // keys, admin password, TOTP secret) is a secret, and anything in this file
+  // is committed to git. Local runs read .dev.vars; production reads secrets
+  // uploaded with `npm run cf:secrets`. See README "Deploying to Cloudflare".
 }

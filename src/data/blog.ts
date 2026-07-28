@@ -25,13 +25,21 @@ import minLight from "@shikijs/themes/min-light";
 import type { Highlighter } from "shiki";
 import { unified } from "unified";
 import { getServiceRoleClient } from "@/lib/supabase";
+import { rethrowIfNextControlFlow } from "@/lib/next-errors";
 
-// The full `shiki` package resolves languages/themes through its bundled
-// lookup tables, which pull in all ~200 grammars (~8MB) into the Workers
-// bundle regardless of which ones are used. Importing only the specific
-// grammars this blog actually uses keeps the bundle under Cloudflare's
-// size limit. Any code fence language outside this list silently renders
-// unhighlighted instead of crashing (rehype-pretty-code catches the error).
+// Two separate constraints force this hand-rolled highlighter:
+//
+// 1. Bundle size. The full `shiki` package resolves languages and themes
+//    through bundled lookup tables that drag all ~200 grammars (~8MB) into the
+//    Worker regardless of what is actually used, blowing past Cloudflare's
+//    3 MiB limit. Importing only the grammars this blog uses keeps it small.
+//
+// 2. No WASM. Shiki's default oniguruma regex engine compiles WASM from raw
+//    bytes at runtime, which the Workers runtime forbids. The JavaScript regex
+//    engine has no WASM dependency and works there.
+//
+// A code fence in a language outside this list renders unhighlighted rather
+// than throwing -- rehype-pretty-code swallows the unknown-language error.
 const highlighterPromise = createHighlighterCore({
   themes: [minLight, minDark],
   langs: [
@@ -88,9 +96,9 @@ export async function markdownToHTML(markdown: string) {
         dark: "min-dark",
       },
       keepBackground: false,
-      // Cloudflare Workers disallows compiling WASM from raw bytes at runtime,
-      // which rules out shiki's default oniguruma engine. The JS regex engine
-      // has no WASM dependency, so it works in the Workers runtime.
+      // Patched rehype-pretty-code no longer imports shiki's own
+      // `getHighlighter`, so the highlighter must be supplied here. See
+      // patches/rehype-pretty-code+0.13.2.patch.
       getHighlighter: () => highlighterPromise as unknown as Promise<Highlighter>,
     })
     .use(rehypeStringify)
@@ -125,26 +133,42 @@ async function buildPost(row: PostRow) {
 
 export async function getPost(slug: string) {
   const adminClient = getServiceRoleClient();
-  const { data, error } = await adminClient
-    .from("posts")
-    .select("*")
-    .eq("slug", slug)
-    .maybeSingle();
+  if (!adminClient) return null;
 
-  if (error || !data) return null;
+  try {
+    const { data, error } = await adminClient
+      .from("posts")
+      .select("*")
+      .eq("slug", slug)
+      .maybeSingle();
 
-  return buildPost(data as PostRow);
+    if (error || !data) return null;
+
+    return buildPost(data as PostRow);
+  } catch (e) {
+    rethrowIfNextControlFlow(e);
+    console.error(`[blog] Unexpected error loading post "${slug}":`, e);
+    return null;
+  }
 }
 
 export async function getBlogPosts() {
   const adminClient = getServiceRoleClient();
-  const { data, error } = await adminClient
-    .from("posts")
-    .select("*")
-    .eq("status", "published")
-    .order("published_at", { ascending: false });
+  if (!adminClient) return [];
 
-  if (error || !data) return [];
+  try {
+    const { data, error } = await adminClient
+      .from("posts")
+      .select("*")
+      .eq("status", "published")
+      .order("published_at", { ascending: false });
 
-  return Promise.all((data as PostRow[]).map(buildPost));
+    if (error || !data) return [];
+
+    return await Promise.all((data as PostRow[]).map(buildPost));
+  } catch (e) {
+    rethrowIfNextControlFlow(e);
+    console.error("[blog] Unexpected error loading posts:", e);
+    return [];
+  }
 }

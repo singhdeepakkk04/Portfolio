@@ -7,7 +7,7 @@ export async function GET(
     { params }: { params: { slug: string } }
 ) {
     const session = request.cookies.get("admin-session")?.value;
-    if (!(await isValidSessionToken(session))) {
+    if (!isValidSessionToken(session)) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -29,7 +29,7 @@ export async function PUT(
     { params }: { params: { slug: string } }
 ) {
     const session = request.cookies.get("admin-session")?.value;
-    if (!(await isValidSessionToken(session))) {
+    if (!isValidSessionToken(session)) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -50,7 +50,7 @@ export async function DELETE(
     { params }: { params: { slug: string } }
 ) {
     const session = request.cookies.get("admin-session")?.value;
-    if (!(await isValidSessionToken(session))) {
+    if (!isValidSessionToken(session)) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -62,4 +62,3 @@ export async function DELETE(
         return NextResponse.json({ error: "Failed to delete post" }, { status: 500 });
     }
 }
-

@@ -4,11 +4,10 @@ import { isValidSessionToken } from "@/lib/admin/auth";
 
 export async function GET(request: NextRequest) {
     const session = request.cookies.get("admin-session")?.value;
-    if (!(await isValidSessionToken(session))) {
+    if (!isValidSessionToken(session)) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const posts = await getAllPosts();
     return NextResponse.json(posts);
 }
-

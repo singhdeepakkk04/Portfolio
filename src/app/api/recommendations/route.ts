@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase, getServiceRoleClient } from "@/lib/supabase";
+import { getServiceRoleClient } from "@/lib/supabase";
 import { isValidSessionToken } from "@/lib/admin/auth";
 
 // Public route to submit a recommendation
@@ -13,6 +13,9 @@ export async function POST(request: NextRequest) {
         }
 
         const adminClient = getServiceRoleClient();
+        if (!adminClient) {
+            return NextResponse.json({ error: "Recommendations storage is not configured" }, { status: 503 });
+        }
         const { data, error } = await adminClient
             .from("recommendations")
             .insert([
@@ -40,11 +43,15 @@ export async function POST(request: NextRequest) {
 // Admin route to get all recommendations (including unapproved)
 export async function GET(request: NextRequest) {
     const session = request.cookies.get("admin-session")?.value;
-    if (!(await isValidSessionToken(session))) {
+    if (!isValidSessionToken(session)) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const adminClient = getServiceRoleClient();
+    if (!adminClient) {
+        return NextResponse.json({ error: "Recommendations storage is not configured" }, { status: 503 });
+    }
+
     const { data, error } = await adminClient
         .from("recommendations")
         .select("*")
@@ -60,7 +67,7 @@ export async function GET(request: NextRequest) {
 // Admin route to approve/reject recommendations
 export async function PATCH(request: NextRequest) {
     const session = request.cookies.get("admin-session")?.value;
-    if (!(await isValidSessionToken(session))) {
+    if (!isValidSessionToken(session)) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -69,6 +76,9 @@ export async function PATCH(request: NextRequest) {
         const { id, approved } = body;
 
         const adminClient = getServiceRoleClient();
+        if (!adminClient) {
+            return NextResponse.json({ error: "Recommendations storage is not configured" }, { status: 503 });
+        }
         const { data, error } = await adminClient
             .from("recommendations")
             .update({ approved })
@@ -87,7 +97,7 @@ export async function PATCH(request: NextRequest) {
 // Admin route to delete a recommendation
 export async function DELETE(request: NextRequest) {
     const session = request.cookies.get("admin-session")?.value;
-    if (!(await isValidSessionToken(session))) {
+    if (!isValidSessionToken(session)) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -100,6 +110,9 @@ export async function DELETE(request: NextRequest) {
         }
 
         const adminClient = getServiceRoleClient();
+        if (!adminClient) {
+            return NextResponse.json({ error: "Recommendations storage is not configured" }, { status: 503 });
+        }
         const { error } = await adminClient.from("recommendations").delete().eq("id", id);
 
         if (error) {
@@ -111,4 +124,3 @@ export async function DELETE(request: NextRequest) {
         return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }
 }
-

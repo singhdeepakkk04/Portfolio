@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-import Markdown from "@/components/markdown";
+import Markdown from "react-markdown";
 
 interface ResumeCardProps {
   logoUrl: string;

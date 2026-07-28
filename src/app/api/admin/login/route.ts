@@ -122,7 +122,7 @@ export async function POST(request: NextRequest) {
 
         // TOTP verified — create session
         pendingTOTP.delete(temp_token);
-        const sessionToken = await createSessionToken();
+        const sessionToken = createSessionToken();
         const response = NextResponse.json({ success: true, authenticated: true });
 
         response.cookies.set("admin-session", sessionToken, {
@@ -176,14 +176,30 @@ export async function POST(request: NextRequest) {
         // For this app, we set it as a runtime env var.
         process.env.TOTP_SECRET = setup.secret;
 
-        // Cloudflare Pages Compatibility: We cannot write to .env.local here.
-        // The user MUST manually add this to their environment variables in production.
-        // The in-memory process.env variable will keep them logged in until the next cold start.
+        // Also write it to .env.local for persistence across restarts
+        const fs = await import("fs");
+        const path = await import("path");
+        const envPath = path.join(process.cwd(), ".env.local");
+        try {
+            let envContent = fs.readFileSync(envPath, "utf-8");
+            if (envContent.includes("TOTP_SECRET=")) {
+                envContent = envContent.replace(
+                    /TOTP_SECRET=.*/,
+                    `TOTP_SECRET=${setup.secret}`
+                );
+            } else {
+                envContent += `\nTOTP_SECRET=${setup.secret}\n`;
+            }
+            fs.writeFileSync(envPath, envContent);
+        } catch (e) {
+            // If we can't write to .env.local, at least the runtime var is set
+            console.error("Could not persist TOTP secret to .env.local:", e);
+        }
 
         pendingSetups.delete(setup_token);
 
         // Create session
-        const sessionToken = await createSessionToken();
+        const sessionToken = createSessionToken();
         const response = NextResponse.json({
             success: true,
             authenticated: true,
@@ -203,4 +219,3 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
 }
-

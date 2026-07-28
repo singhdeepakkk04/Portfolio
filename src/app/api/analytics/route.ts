@@ -27,6 +27,10 @@ export async function POST(request: NextRequest) {
         }
 
         const adminClient = getServiceRoleClient();
+        if (!adminClient) {
+            return NextResponse.json({ error: "Analytics storage is not configured" }, { status: 503 });
+        }
+
         const { error } = await adminClient.from("analytics").insert([
             {
                 path,
