@@ -107,9 +107,13 @@ export async function markdownToHTML(markdown: string) {
   return p.toString();
 }
 
-async function buildPost(row: PostRow) {
-  const content = await markdownToHTML(row.content);
-
+// Cheap: field mapping and a word count, no markdown parsing.
+//
+// This is deliberately split from `buildPost` because rendering markdown is by
+// far the most expensive thing this app does per request. Anything that only
+// needs to describe a post -- listings, sitemaps, static params -- must stop
+// here and never touch `markdownToHTML`.
+function buildPostMeta(row: PostRow) {
   // Calculate reading time
   const words = row.content.split(/\s+/).filter(Boolean).length;
   const readingTime = Math.max(1, Math.ceil(words / 200));
@@ -125,9 +129,20 @@ async function buildPost(row: PostRow) {
   };
 
   return {
-    source: content,
     metadata,
     slug: row.slug,
+  };
+}
+
+// Expensive: runs the full remark -> rehype -> Shiki pipeline over the whole
+// post body. Shiki uses the JavaScript regex engine here (Workers forbids
+// compiling WASM from raw bytes), which makes tokenisation costly enough that
+// doing it once per post per request will exhaust the Worker's CPU budget.
+// Only pay for it on a post someone is actually reading.
+async function buildPost(row: PostRow) {
+  return {
+    ...buildPostMeta(row),
+    source: await markdownToHTML(row.content),
   };
 }
 
@@ -152,6 +167,18 @@ export async function getPost(slug: string) {
   }
 }
 
+/**
+ * Every published post, as metadata only -- no rendered `source`.
+ *
+ * Listings, sitemaps and `generateStaticParams` all want to describe posts
+ * rather than display them, so none of them need the rendered HTML. Rendering
+ * it anyway meant one `/blog` request syntax-highlighted every post's entire
+ * body and threw the result away, which is O(number of posts) of the most
+ * expensive work available and tripped Cloudflare's per-request CPU limit
+ * (error 1102) with only two posts published.
+ *
+ * Use {@link getPost} when the rendered article body is actually needed.
+ */
 export async function getBlogPosts() {
   const adminClient = getServiceRoleClient();
   if (!adminClient) return [];
@@ -165,7 +192,7 @@ export async function getBlogPosts() {
 
     if (error || !data) return [];
 
-    return await Promise.all((data as PostRow[]).map(buildPost));
+    return (data as PostRow[]).map(buildPostMeta);
   } catch (e) {
     rethrowIfNextControlFlow(e);
     console.error("[blog] Unexpected error loading posts:", e);
