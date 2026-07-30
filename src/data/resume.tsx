@@ -116,7 +116,7 @@ export const DATA: ResumeData = {
   description:
     "MBA Graduate, IIT Roorkee | Technologist turned Business Leader | Open to Product Management, Strategy Consulting & Technical Leadership roles",
   summary:
-    "Ask me which KPI a Head of Sales actually needs, and I will have an opinion. Ask me why the pipeline feeding it is late, and I will open the **ADF** logs. Most people pick one side of that line. I have never seen the point.\n\nThree years at **LTIMindtree** taught me the plumbing: **Azure Data Factory**, **PySpark**, Medallion architecture, roughly **100GB a day** for banking and retail clients, and **99%+ SLA** on the pipelines nobody notices until they break. Now at **MAQ Software** I work further up the stack on **AI-enabled product analytics**, turning half-formed questions from Product, Sales and Ops into numbers those teams actually move on. One of them became a plain-English interface over **Azure OpenAI**, so stakeholders stopped waiting two days in an analyst's queue.\n\nI am certified on **Twilio Segment** and as an **Azure Data Engineer**, which is the formal way of saying I can design the event taxonomy and the governance around it, then go fix the ingestion job that is dropping the events.\n\nWeekends are for building. Most recently a **13-agent RAG system** that drafts Business Analyst deliverables: I interviewed practising BAs before writing a line of code, fine-tuned a **Phi-3 Mini** on real BA artefacts, and shipped it as product manager, architect and sole engineer.",
+    "Ask me which KPI a Head of Sales actually needs, and I will have an opinion. Ask me why the pipeline feeding it is late, and I will open the **ADF** logs. Most people pick one side of that line. I have never seen the point.\n\nThree years at **LTIMindtree** taught me the plumbing: **Azure Data Factory**, **PySpark**, Medallion architecture, roughly **100GB a day** for banking and retail clients, and **99%+ SLA** on the pipelines nobody notices until they break. Now at **MAQ Software** I work further up the stack on **AI-enabled product analytics**, turning half-formed questions from Product, Sales and Ops into numbers those teams actually move on. One of them became a plain-English interface over **Azure OpenAI**, so stakeholders stopped waiting two days in an analyst's queue.\n\nI am certified on **Twilio Segment** and as an **Azure Data Engineer**, which is the formal way of saying I can design the event taxonomy and the governance around it, then go fix the ingestion job that is dropping the events. At LTIMindtree that looked like automated validation frameworks holding **99%+ data accuracy** and cutting quality escalations by **60%**, on pipelines moving 500M+ transaction records a month.\n\nWeekends are for building. Most recently a **13-agent RAG system** that drafts Business Analyst deliverables: I interviewed practising BAs before writing a line of code, fine-tuned a **Phi-3 Mini** on real BA artefacts, and shipped it as product manager, architect and sole engineer.",
   avatarUrl: "/mee.jpg",
   skillGroups: [
     {
@@ -193,8 +193,10 @@ export const DATA: ResumeData = {
       start: "May 2025",
       end: "Jul 2025",
       description: [
+        "Designed an **employee contribution scoring system** end to end - defined the star schema, authored DDL for the dimension and fact tables and set grain definitions, giving the organisation an objective measure of individual impact and cutting the performance evaluation cycle by **40%**.",
+        "Ran sprint delivery for a team of **4 developers** in Azure DevOps - decomposed epics into stories, set acceptance criteria, tracked velocity and cleared blockers, while a maintained dependency map cut integration issues by **60%**.",
         "Built an end-to-end **product KPI analytics dashboard** in Power BI - conducting cohort analysis, user segmentation, and retention tracking with a star-schema data model, accelerating product evaluation cycles by **40%** across **50+ users**.",
-        "Applied advanced SQL to identify product funnel drop-off points and built an **AI-enabled automated data processing tool** - cutting analytical TAT by **70%** and reducing manual workflows to under **30 minutes per source**.",
+        "Built an **AI-assisted metadata discovery framework** in Python that auto-mapped source-to-target schemas and surfaced funnel drop-off points - cutting analytical TAT by **70%** and reducing manual workflows to under **30 minutes per source**.",
         "Built a **natural language product analytics interface using Azure OpenAI** - enabling Product and Business stakeholders to query revenue dashboards in plain English, eliminating **5+ analyst-hours weekly** and reducing ad-hoc data access TAT from **2-3 business days to under 10 minutes**.",
         "**Tools:** Python, SQL, Azure DevOps, Power BI, Figma, ADO MCP, Azure OpenAI.",
       ],
@@ -209,11 +211,13 @@ export const DATA: ResumeData = {
       start: "Jun 2021",
       end: "May 2024",
       description: [
-        "Wrote advanced SQL queries to analyse large-scale banking datasets and generate actionable insights for **15+ business stakeholders** - building automated ADF data pipelines on Azure (ADLS Gen2) that reduced data-to-insight lag and powering downstream BI dashboards and revenue metric reports.",
+        "Owned the ingestion and transformation backbone for banking and retail clients at **~100GB daily** - **ADF** pipelines landing REST API, SFTP and relational sources into **ADLS Gen2**, then **Medallion** (bronze to silver to gold) transformations in **PySpark** on **Databricks** with partitioning and schema evolution.",
+        "Wrote advanced SQL against large-scale banking datasets to generate actionable insights for **15+ business stakeholders** - reducing data-to-insight lag and powering the downstream BI dashboards and revenue metric reports those teams ran on.",
         "Conducted **funnel analytics, cohort analysis, and user segmentation** on **500M+ monthly transaction records** using SQL and Python - identifying retention patterns, feature adoption signals, and growth opportunities to optimise product and campaign performance, with **99%+ pipeline SLA adherence**.",
+        "Modelled dimension and fact tables for **retail POS** data driving automated sales-incentive calculation, and integrated legacy on-premise systems through **Talend** - resolving production data incidents in Jira at a **99% resolution rate**.",
         "Automated **end-to-end BI reporting pipelines for revenue, conversion, and performance metrics** - eliminating manual Excel-based reporting, cutting TAT by **80%** and saving **45+ analyst-hours per reporting month**.",
-        "Demonstrated strong **SQL expertise on large-scale product datasets** - optimising complex analytical queries across high-volume tables, accelerating product dashboard refresh by **~40%** and reducing stakeholder wait time on critical BI and campaign performance reports.",
-        "Achieved **99%+ data accuracy** across analytics pipelines through automated data validation frameworks - cutting quality escalations by **~60%** and ensuring reliable product, revenue, and campaign metric reporting.",
+        "Held **99%+ data accuracy** across analytics pipelines with automated validation frameworks - cutting quality escalations by **~60%** and keeping product, revenue, and campaign reporting trustworthy.",
+        "**Tools:** Azure Data Factory, ADLS Gen2, PySpark, Databricks, Talend, SQL, Python, Power BI, Jira.",
       ],
     },
     {
@@ -226,11 +230,10 @@ export const DATA: ResumeData = {
       start: "Dec 2020",
       end: "May 2021",
       description: [
-        "Built advanced web-scraping tools using Python to efficiently develop the Universal Item Master system.",
-        "Shaped the overall data architecture and business flow, carefully selecting appropriate technologies.",
-        "Designed the database architecture from scratch, creating comprehensive tables and detailed ER diagrams.",
-        "Automated the data ingestion pipeline from client stores using an ELT framework for efficient processing.",
-        "Developed back-end code using Python for scripting, while securely maintaining data on MongoDB.",
+        "Built the **Universal Item Master** from an empty database - designed the schema and ER model, then wrote the Python scrapers that populated it from client store catalogues.",
+        "Owned the data architecture and business flow end to end as the only data engineer on the build, including the technology choices behind it.",
+        "Automated catalogue ingestion from client stores with an **ELT framework**, replacing the manual upload process the product had been running on.",
+        "Wrote the Python back end and managed storage on **MongoDB**.",
       ],
     },
     {
@@ -243,10 +246,10 @@ export const DATA: ResumeData = {
       start: "Mar 2020",
       end: "Jun 2020",
       description: [
-        "Integrated Citrix tools to streamline collaboration, increasing issue resolution speed by 50%.",
-        "Implemented a convolutional neural network model using TensorFlow 2.0 for colour recognition task.",
-        "Assisted in developing advanced algorithms for a Recommendation System as a Shadow ML Engineer.",
-        "Best intern recognized with a Letter of Appreciation for commendable work and assisting peers in learning.",
+        "Integrated **Citrix** collaboration tooling into the delivery workflow, increasing issue resolution speed by **50%**.",
+        "Implemented a **convolutional neural network** in TensorFlow 2.0 for a colour recognition task.",
+        "Contributed to the algorithms behind a **recommendation system** as a shadow ML engineer.",
+        "Recognised as **best intern** with a Letter of Appreciation, for the work and for bringing peers up to speed.",
       ],
     },
   ],
