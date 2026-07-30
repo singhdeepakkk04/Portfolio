@@ -44,6 +44,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# personal documents kept in the working tree for reference only.
+# CVs, ATS variants and recruiter/job-spec PDFs: never publish these.
+/Deepak CVS/
+/cvs/
+
 # sensitive / unnecessary files
 *.pdf
 *.backup.mdx
