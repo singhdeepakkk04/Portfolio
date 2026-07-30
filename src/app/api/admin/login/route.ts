@@ -28,6 +28,39 @@ function generateTempToken(): string {
     );
 }
 
+/**
+ * Tries to store a freshly-enrolled TOTP secret so it survives this request.
+ *
+ * Only possible when running on a real filesystem, i.e. `next dev` locally.
+ * Cloudflare Workers has no writable filesystem, so this returns false there
+ * and the caller must tell the operator to store it as a Worker secret.
+ *
+ * @returns true only if the secret was actually written somewhere durable.
+ */
+async function persistTotpSecret(secret: string): Promise<boolean> {
+    try {
+        const fs = await import("node:fs");
+        const path = await import("node:path");
+        const envPath = path.join(process.cwd(), ".env.local");
+
+        if (!fs.existsSync(envPath)) return false;
+
+        let envContent = fs.readFileSync(envPath, "utf-8");
+        envContent = envContent.includes("TOTP_SECRET=")
+            ? envContent.replace(/TOTP_SECRET=.*/, `TOTP_SECRET=${secret}`)
+            : `${envContent}\nTOTP_SECRET=${secret}\n`;
+        fs.writeFileSync(envPath, envContent);
+
+        // Safe here precisely because the value is now on disk: this process
+        // keeps serving with it, and a restart reloads the same value.
+        process.env.TOTP_SECRET = secret;
+        return true;
+    } catch {
+        // No filesystem (Workers) or no write permission.
+        return false;
+    }
+}
+
 export async function POST(request: NextRequest) {
     const body = await request.json();
     const { step, username, password, totp_code, setup_token } = body;
@@ -171,29 +204,40 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Code verified! Persist the TOTP secret to env
-        // In production, this would write to a secure store.
-        // For this app, we set it as a runtime env var.
-        process.env.TOTP_SECRET = setup.secret;
+        // Code verified. The secret now has to outlive this request, and on
+        // Cloudflare Workers it cannot: there is no filesystem to write
+        // .env.local to, and a `process.env` assignment lives only in the
+        // isolate that handled this request and disappears with it.
+        //
+        // Reporting success anyway would be the worst outcome. The session
+        // cookie is signed with a key derived from ADMIN_PASSWORD and
+        // TOTP_SECRET, so a session minted here would be signed with the new
+        // secret while every other isolate still derives the old one -- the
+        // admin would be logged straight back out, and 2FA would appear
+        // configured while nothing had been stored. Fail loudly instead and
+        // tell the operator how to persist it.
+        const persisted = await persistTotpSecret(setup.secret);
 
-        // Also write it to .env.local for persistence across restarts
-        const fs = await import("fs");
-        const path = await import("path");
-        const envPath = path.join(process.cwd(), ".env.local");
-        try {
-            let envContent = fs.readFileSync(envPath, "utf-8");
-            if (envContent.includes("TOTP_SECRET=")) {
-                envContent = envContent.replace(
-                    /TOTP_SECRET=.*/,
-                    `TOTP_SECRET=${setup.secret}`
-                );
-            } else {
-                envContent += `\nTOTP_SECRET=${setup.secret}\n`;
-            }
-            fs.writeFileSync(envPath, envContent);
-        } catch (e) {
-            // If we can't write to .env.local, at least the runtime var is set
-            console.error("Could not persist TOTP secret to .env.local:", e);
+        if (!persisted) {
+            pendingSetups.delete(setup_token);
+
+            return NextResponse.json(
+                {
+                    error:
+                        "Your code was correct, but this deployment cannot store the " +
+                        "2FA secret itself. Save it as the TOTP_SECRET secret, then log " +
+                        "in again.",
+                    requires_manual_persist: true,
+                    // Already shown to this admin as a QR code and `manual_key`
+                    // earlier in the same password-authenticated flow, so this
+                    // is not a new disclosure.
+                    secret: setup.secret,
+                    how_to:
+                        "Add TOTP_SECRET to .dev.vars and run `npm run cf:secrets`, or add " +
+                        "it under Settings > Variables and Secrets as a Secret.",
+                },
+                { status: 503 }
+            );
         }
 
         pendingSetups.delete(setup_token);
