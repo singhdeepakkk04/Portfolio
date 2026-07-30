@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { isValidSessionToken } from "@/lib/admin/session-edge";
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // Protect admin routes
@@ -11,10 +12,22 @@ export function middleware(request: NextRequest) {
             return NextResponse.next();
         }
 
-        // Check for valid session
-        const session = request.cookies.get("admin-session");
-        if (!session) {
-            return NextResponse.redirect(new URL("/admin/login", request.url));
+        // Verify the cookie's signature, not merely its presence. Checking only
+        // that the cookie existed meant `document.cookie = "admin-session=x"`
+        // was enough to reach the admin UI. The API routes behind it always
+        // validated properly, so nothing could be read or written -- but the
+        // gate itself did nothing.
+        const session = request.cookies.get("admin-session")?.value;
+        if (!(await isValidSessionToken(session))) {
+            const response = NextResponse.redirect(new URL("/admin/login", request.url));
+
+            // Clear a rejected cookie so an expired or forged token doesn't sit
+            // in the browser re-triggering this redirect on every navigation.
+            if (session) {
+                response.cookies.delete("admin-session");
+            }
+
+            return response;
         }
     }
 

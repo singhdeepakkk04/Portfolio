@@ -24,18 +24,8 @@ const noStoreFetch: typeof fetch = (input, init) => fetch(input, { ...init, cach
 function readConfig() {
     return {
         url: process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL,
-        anonKey: process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
         serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
     };
-}
-
-/**
- * True when the Supabase URL and service-role key are both present. Lets a
- * caller tell "no rows yet" apart from "not wired up".
- */
-export function isSupabaseConfigured(): boolean {
-    const { url, serviceRoleKey } = readConfig();
-    return !!url && !!serviceRoleKey;
 }
 
 /**
@@ -76,20 +66,4 @@ export function requireServiceRoleClient(): SupabaseClient {
     }
 
     return client;
-}
-
-/**
- * Client for public, RLS-constrained operations. Same null contract as above.
- */
-export function getAnonClient(): SupabaseClient | null {
-    const { url, anonKey } = readConfig();
-
-    if (!url || !anonKey) {
-        console.error(
-            "[supabase] Missing anon credentials; skipping query. Set SUPABASE_URL and SUPABASE_ANON_KEY."
-        );
-        return null;
-    }
-
-    return createClient(url, anonKey, { global: { fetch: noStoreFetch } });
 }
