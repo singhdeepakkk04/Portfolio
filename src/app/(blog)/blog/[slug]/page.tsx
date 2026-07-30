@@ -11,6 +11,25 @@ export async function generateStaticParams() {
   return posts.map((post) => ({ slug: post.slug }));
 }
 
+/**
+ * Absolute URL for a post's social-preview image.
+ *
+ * Cover images uploaded through the admin editor are stored in Supabase and
+ * come back as absolute URLs, while older posts may carry a site-relative
+ * path. Prefixing DATA.url unconditionally mangled the absolute ones into
+ * `https://site.devhttps://supabase.co/...`, so only relative paths are
+ * prefixed.
+ *
+ * Posts with no cover image fall back to the profile photo. The previous
+ * fallback pointed at `${DATA.url}/og?title=...`, but no `/og` route exists --
+ * `next/og` renders through WASM the Workers runtime refuses to instantiate --
+ * so those previews resolved to a 404.
+ */
+function resolveOgImage(image?: string): string {
+  if (!image) return `${DATA.url}${DATA.avatarUrl}`;
+  return image.startsWith("http") ? image : `${DATA.url}${image}`;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -27,7 +46,7 @@ export async function generateMetadata({
     summary: description,
     image,
   } = post.metadata;
-  let ogImage = image ? `${DATA.url}${image}` : `${DATA.url}/og?title=${title}`;
+  let ogImage = resolveOgImage(image);
 
   return {
     title,
@@ -81,9 +100,7 @@ export default async function Blog({
             datePublished: post.metadata.publishedAt,
             dateModified: post.metadata.publishedAt,
             description: post.metadata.summary,
-            image: post.metadata.image
-              ? `${DATA.url}${post.metadata.image}`
-              : `${DATA.url}/og?title=${post.metadata.title}`,
+            image: resolveOgImage(post.metadata.image),
             url: `${DATA.url}/blog/${post.slug}`,
             author: {
               "@type": "Person",

@@ -91,7 +91,13 @@ export default function RootLayout({
               name: DATA.name,
               url: DATA.url,
               image: DATA.avatarUrl,
-              sameAs: Object.values(DATA.contact.social).map((s) => s.url),
+              // `sameAs` asserts to search engines that these profiles are the
+              // same person, so only real absolute profile URLs may appear.
+              // Anything relative or a "#" placeholder is filtered out rather
+              // than published as an identity claim.
+              sameAs: Object.values(DATA.contact.social)
+                .map((s) => s.url)
+                .filter((url) => url.startsWith("http")),
               jobTitle: "Product Manager & Software Engineer",
               alumniOf: {
                 "@type": "CollegeOrUniversity",

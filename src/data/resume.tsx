@@ -110,7 +110,7 @@ export interface ResumeData {
 export const DATA: ResumeData = {
   name: "Deepak Singh",
   initials: "DS",
-  url: "https://dillion.io",
+  url: "https://portfolio.getdeeepak04.workers.dev",
   location: "Mumbai, Maharashtra",
   locationLink: "https://www.google.com/maps/place/mumbai",
   description:
@@ -158,27 +158,10 @@ export const DATA: ResumeData = {
 
         navbar: true,
       },
-      X: {
-        name: "X",
-        url: "https://dub.sh/dillion-twitter",
-        icon: Icons.x,
-
-        navbar: false,
-      },
-      Reddit: {
-        name: "Reddit",
-        url: "https://www.reddit.com/",
-        icon: Icons.reddit,
-
-        navbar: false,
-      },
-      email: {
-        name: "Send Email",
-        url: "#",
-        icon: Icons.email,
-
-        navbar: false,
-      },
+      // Only real, personal profiles belong here. Every entry is published in
+      // the JSON-LD `sameAs` array in the root layout, which tells search
+      // engines "these accounts are the same person" -- so a placeholder or
+      // someone else's handle is actively harmful, not just untidy.
     },
   },
 
