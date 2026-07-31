@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
 
         // Credentials valid. Check if TOTP is configured.
         if (isTOTPConfigured()) {
-            // TOTP is set up — ask for the code
+            // TOTP is set up, so ask for the code
             const tempToken = generateTempToken();
             pendingTOTP.set(tempToken, Date.now() + 5 * 60 * 1000); // 5 min expiry
             return NextResponse.json({
@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
                 temp_token: tempToken,
             });
         } else {
-            // TOTP not yet configured — generate QR code for setup
+            // TOTP not yet configured, so generate a QR code for setup
             const { secret, uri } = generateTOTPSecret();
             const qrDataUrl = await QRCode.toDataURL(uri, {
                 width: 256,
@@ -153,7 +153,7 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // TOTP verified — create session
+        // TOTP verified, create the session
         pendingTOTP.delete(temp_token);
         const sessionToken = createSessionToken();
         const response = NextResponse.json({ success: true, authenticated: true });

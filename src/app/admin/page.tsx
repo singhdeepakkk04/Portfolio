@@ -389,7 +389,7 @@ export default function AdminDashboard() {
                                     <div className="p-6 rounded-xl border bg-card">
                                         <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                                             <BarChart3 className="size-5" />
-                                            Views — Last 7 Days
+                                            Views (Last 7 Days)
                                         </h3>
                                         <div className="flex items-end gap-2 h-40">
                                             {stats.dailyViews.map((day) => {

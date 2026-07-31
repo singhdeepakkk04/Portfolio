@@ -11,7 +11,7 @@ export function NewsletterForm() {
         if (!email) return;
 
         try {
-            // Store subscriber email — to be connected to a DB later
+            // Store subscriber email, to be connected to a DB later
             const res = await fetch("/api/subscribe", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

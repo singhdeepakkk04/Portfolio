@@ -176,10 +176,10 @@ export const DATA: ResumeData = {
       start: "May 2026",
       end: "Present",
       description: [
-        "Built and maintained **automated dashboards and BI reports for key product and revenue metrics** in Power BI - translating complex business and product questions into structured, actionable recommendations for Product, Sales, and Operations stakeholders, reducing insight TAT by **~35%** and accelerating product decision cycles by **~2 weeks**.",
-        "Deployed an **AI-enabled product analytics automation platform** - scaling BI reporting output **5x without adding headcount**, compressing dashboard preparation from **4-6 hours to under 15 minutes** and saving **80+ analyst-hours** monthly.",
-        "Analysed **product usage, funnel performance, retention, and feature adoption** across 3+ concurrent product initiatives - conducting user segmentation and cohort analysis to identify growth opportunities and improving analytical delivery predictability by **~40%**.",
-        "Conducted **A/B testing and campaign impact measurement** across product experiments - validating analytical outputs against business requirements, lifting insight acceptance rate by **~30%** and cutting post-analysis rework TAT by **~2 weeks**.",
+        "Own the reporting roadmap for **key product and revenue metrics**, turning open-ended questions from Product, Sales and Operations into a prioritised backlog and a Power BI layer those teams make decisions on - cutting insight TAT by **~35%** and pulling product decision cycles forward by **~2 weeks**.",
+        "Drove delivery of an **AI-enabled product analytics automation platform** from problem statement to rollout - scaling reporting output **5x without adding headcount**, compressing dashboard preparation from **4-6 hours to under 15 minutes** and returning **80+ analyst-hours** a month to the team.",
+        "Set the measurement approach across **3+ concurrent product initiatives** - defining which usage, funnel, retention and adoption metrics each one is judged on, and the segmentation and cohort cuts beneath them, improving delivery predictability by **~40%**.",
+        "Run the experimentation practice for product bets - framing **A/B tests and campaign impact measurement**, and holding every output to the business question it was commissioned to answer, lifting insight acceptance by **~30%** and cutting post-analysis rework by **~2 weeks**.",
         "Sole PM on a custom **EMR platform** for eye-care hospitals, one of several concurrent projects - ran **20+ discovery sessions** with ophthalmologists and clinical staff and translated the findings into epics, features and user stories with explicit acceptance criteria and definition of done.",
         "Now steering that platform through build and **UAT**, with usage-analytics feedback loops designed in so clinical workflows can be tuned against adoption and training time once live.",
         "**Tools:** SQL, Power BI, Tableau, Python, Azure OpenAI, Azure DevOps, JIRA.",
@@ -195,10 +195,10 @@ export const DATA: ResumeData = {
       start: "May 2025",
       end: "Jul 2025",
       description: [
-        "Designed an **employee contribution scoring system** end to end - defined the star schema, authored DDL for the dimension and fact tables and set grain definitions, giving the organisation an objective measure of individual impact and cutting the performance evaluation cycle by **40%**.",
+        "Owned an **employee contribution scoring system** end to end - defined the star schema, the dimension and fact grain and the DDL behind it, giving the organisation an objective measure of individual impact and cutting the performance evaluation cycle by **40%**.",
         "Ran sprint delivery for a team of **4 developers** in Azure DevOps - decomposed epics into stories, set acceptance criteria, tracked velocity and cleared blockers, while a maintained dependency map cut integration issues by **60%**.",
-        "Built an end-to-end **product KPI analytics dashboard** in Power BI - conducting cohort analysis, user segmentation, and retention tracking with a star-schema data model, accelerating product evaluation cycles by **40%** across **50+ users**.",
-        "Built an **AI-assisted metadata discovery framework** in Python that auto-mapped source-to-target schemas and surfaced funnel drop-off points - cutting analytical TAT by **70%** and reducing manual workflows to under **30 minutes per source**.",
+        "Defined and delivered a **product KPI dashboard** used by **50+ people** - chose the cohort, segmentation and retention cuts it would answer, modelled them on a star schema, and accelerated product evaluation cycles by **40%**.",
+        "Scoped and shipped an **AI-assisted metadata discovery framework** that auto-mapped source-to-target schemas and surfaced funnel drop-off points - cutting analytical TAT by **70%** and reducing manual workflows to under **30 minutes per source**.",
         "Built a **natural language product analytics interface using Azure OpenAI** - enabling Product and Business stakeholders to query revenue dashboards in plain English, eliminating **5+ analyst-hours weekly** and reducing ad-hoc data access TAT from **2-3 business days to under 10 minutes**.",
         "**Tools:** Python, SQL, Azure DevOps, Power BI, Figma, ADO MCP, Azure OpenAI.",
       ],
@@ -214,7 +214,7 @@ export const DATA: ResumeData = {
       end: "May 2024",
       description: [
         "Owned the ingestion and transformation backbone for banking and retail clients at **~100GB daily** - **ADF** pipelines landing REST API, SFTP and relational sources into **ADLS Gen2**, then **Medallion** (bronze to silver to gold) transformations in **PySpark** on **Databricks** with partitioning and schema evolution.",
-        "Wrote advanced SQL against large-scale banking datasets to generate actionable insights for **15+ business stakeholders** - reducing data-to-insight lag and powering the downstream BI dashboards and revenue metric reports those teams ran on.",
+        "Became the analytics point of contact for **15+ business stakeholders** on large-scale banking datasets - translating their questions into SQL, reducing data-to-insight lag and powering the BI dashboards and revenue reports those teams ran on.",
         "Conducted **funnel analytics, cohort analysis, and user segmentation** on **500M+ monthly transaction records** using SQL and Python - identifying retention patterns, feature adoption signals, and growth opportunities to optimise product and campaign performance, with **99%+ pipeline SLA adherence**.",
         "Modelled dimension and fact tables for **retail POS** data driving automated sales-incentive calculation, and integrated legacy on-premise systems through **Talend** - resolving production data incidents in Jira at a **99% resolution rate**.",
         "Automated **end-to-end BI reporting pipelines for revenue, conversion, and performance metrics** - eliminating manual Excel-based reporting, cutting TAT by **80%** and saving **45+ analyst-hours per reporting month**.",
@@ -317,12 +317,12 @@ export const DATA: ResumeData = {
       video: "",
     },
     {
-      title: "Prasnah Kosa — Market Research Platform",
+      title: "Prasnah Kosa: Market Research Platform",
       href: "https://www.thesmalldatastore.com/prasnah",
       dates: "2021",
       active: true,
       description:
-        "Identified a gap for affordable, localized survey tools in India and built a full-stack survey intelligence platform from scratch. Featuring regional language support and demographic targeting, the product was successfully sold to an incumbent market research firm (TheSmallDataStore) — validating the end-to-end business case from market gap analysis to product delivery.",
+        "Identified a gap for affordable, localized survey tools in India and built a full-stack survey intelligence platform from scratch. Featuring regional language support and demographic targeting, the product was successfully sold to an incumbent market research firm (TheSmallDataStore), validating the end-to-end business case from market gap analysis to product delivery.",
       technologies: ["Python", "Django", "PostgreSQL", "Railway", "REST API"],
       links: [
         {

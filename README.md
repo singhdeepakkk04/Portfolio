@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🚀 Deepak Singh — Portfolio & Next.js CMS
+# 🚀 Deepak Singh: Portfolio & Next.js CMS
 
 <p align="center">
   <b>A high-performance, aesthetically stunning Developer Portfolio & AI-ready Content Management System</b>
@@ -171,7 +171,7 @@ npm run cf:deploy       # build + publish to Cloudflare
 ### Constraints worth remembering
 
 - **3 MiB compressed bundle limit.** Check with `npx wrangler deploy --dry-run`. Shiki is
-  imported grammar-by-grammar in `src/data/blog.ts` precisely to stay under it — importing
+  imported grammar-by-grammar in `src/data/blog.ts` precisely to stay under it. Importing
   the full `shiki` package pulls ~200 grammars and blows the limit.
 - **No WASM compiled from raw bytes.** This rules out Shiki's default oniguruma engine
   (hence `createJavaScriptRegexEngine`) and `next/og` / `ImageResponse` (hence the static

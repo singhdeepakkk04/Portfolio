@@ -46,7 +46,7 @@ export function AnalyticsTracker() {
                     }),
                 });
             } catch (error) {
-                // Silently fail — analytics should never break the user experience
+                // Silently fail: analytics should never break the user experience
             }
         };
 
