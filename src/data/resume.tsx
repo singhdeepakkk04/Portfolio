@@ -342,24 +342,24 @@ export const DATA: ResumeData = {
   ],
   hackathons: [
     {
-      title: "Consulting Knights",
-      dates: "2024",
-      location: "IIM Kashipur",
+      title: "V-Guard Big Idea",
+      dates: "Sep - Oct 2025",
+      location: "V-Guard",
       description:
-        "Secured 1st Runner-up in the National Case Study Competition organized by IIM Kashipur. Demonstrated strategic thinking and problem-solving skills in a high-pressure environment.",
+        "National Finalist in the V-Guard Big Idea contest. Presented innovative solutions to real-world business challenges.",
       image:
-        "/iim-kashipur.jpg",
+        "/vguard.jpg",
       links: [
         {
           title: "Contest Details",
           icon: <Icons.globe className="h-4 w-4" />,
-          href: "https://unstop.com/competitions/consulting-knights-iim-kashipur-1325296",
+          href: "https://www.vguard.in/contest/index.php/index",
         },
       ],
     },
     {
       title: "Aventura",
-      dates: "2024",
+      dates: "Feb 2025",
       location: "IIM Lucknow",
       description:
         "Achieved 1st Runner Up in the National Business Plan Competition organized by Ecell, IIM Lucknow. Developed a comprehensive business strategy and financial model.",
@@ -374,8 +374,24 @@ export const DATA: ResumeData = {
       ],
     },
     {
+      title: "Consulting Knights",
+      dates: "Jan 2025",
+      location: "IIM Kashipur",
+      description:
+        "Secured 1st Runner-up in the National Case Study Competition organized by IIM Kashipur. Demonstrated strategic thinking and problem-solving skills in a high-pressure environment.",
+      image:
+        "/iim-kashipur.jpg",
+      links: [
+        {
+          title: "Contest Details",
+          icon: <Icons.globe className="h-4 w-4" />,
+          href: "https://unstop.com/competitions/consulting-knights-iim-kashipur-1325296",
+        },
+      ],
+    },
+    {
       title: "Trendsetter",
-      dates: "2024",
+      dates: "Oct 2024",
       location: "DS Group",
       description:
         "National Finalist in the prestigious Trendsetter competition organized by DS Group. Competed against top B-school teams across the country.",
@@ -386,22 +402,6 @@ export const DATA: ResumeData = {
           title: "Contest Details",
           icon: <Icons.globe className="h-4 w-4" />,
           href: "https://xathon.mettl.com/account/login/TrenDSetter04",
-        },
-      ],
-    },
-    {
-      title: "V-Guard Big Idea",
-      dates: "2024",
-      location: "V-Guard",
-      description:
-        "National Finalist in the V-Guard Big Idea contest. Presented innovative solutions to real-world business challenges.",
-      image:
-        "/vguard.jpg",
-      links: [
-        {
-          title: "Contest Details",
-          icon: <Icons.globe className="h-4 w-4" />,
-          href: "https://www.vguard.in/contest/index.php/index",
         },
       ],
     },
